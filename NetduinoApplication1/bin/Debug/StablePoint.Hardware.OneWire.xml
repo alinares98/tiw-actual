@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StablePoint.Hardware.OneWire</name>
+    </assembly>
+    <members>
+        <member name="T:StablePoint.Hardware.OneWire.Bus">
+            <summary>
+            A helper class to manipulate OneWire Devices. 
+            </summary>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Bus.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            Creates an instance of <see cref="T:StablePoint.Hardware.OneWire.Bus"/> class.
+            </summary>
+            <param name="pinToUse">A hardware pin to use for OneWire communication.</param>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Bus.ScanForDevices(StablePoint.Hardware.OneWire.Family[])">
+            <summary>
+            Scans for connected OneWire devices.
+            </summary>
+            <param name="familiesToInclude">List of device families to include in search. If not provided, will look for any OneWire device.</param>
+            <returns>A list of found OneWire devices, corresponding to the provided family list.</returns>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Bus.CreateDevice(System.String,StablePoint.Hardware.OneWire.Family)">
+            <summary>
+            Creating a 1-Wire <see cref="T:StablePoint.Hardware.OneWire.Device"/> from a known address. Note that it doesn't mean the device is actually connected.
+            </summary>
+            <param name="addressString">Address in hexadecimal string.</param>
+            <param name="family"><see cref="T:StablePoint.Hardware.OneWire.Family"/> of the device.</param>
+            <returns>A <see cref="T:StablePoint.Hardware.OneWire.Device"/>. It is created no matter what.</returns>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Bus.ReportError(System.String,System.String,System.Object)">
+            <summary>
+            A helper function to report errors and raise exceptions.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Bus.AreExceptionsSilent">
+            <summary>
+            Defines how critical errors are handled. Default behavior is to raise an exception on critical error. Alternatively, only <see cref="E:StablePoint.Hardware.OneWire.Bus.ErrorOccurred"/> event may be raised.
+            </summary>
+            <value>
+            If true, critical errors raises <see cref="E:StablePoint.Hardware.OneWire.Bus.ErrorOccurred"/> event. If false, an exception is thrown.
+            </value>
+        </member>
+        <member name="E:StablePoint.Hardware.OneWire.Bus.ErrorOccurred">
+            <summary>
+            Occurs when some error happen.
+            </summary>
+        </member>
+        <member name="T:StablePoint.Hardware.OneWire.Device">
+            <summary>
+            A general OneWire device.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Device.RawBus">
+            <summary>
+            A low-level raw OneWire bus used to communicate with the device. Note that ir is created in <see cref="T:StablePoint.Hardware.OneWire.Bus"/> class and all devices, found by using <see cref="M:StablePoint.Hardware.OneWire.Bus.ScanForDevices(StablePoint.Hardware.OneWire.Family[])"/> method shares the same instance of the bus.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Device.Address">
+            <summary>
+            Address of the device in 8-byte array representation.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Device.AddressString">
+            <summary>
+            Address of the device in 8-byte hexadecimal representation.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Device.Family">
+            <summary>
+            Family of the device.
+            </summary>
+        </member>
+        <member name="T:StablePoint.Hardware.OneWire.GeneralEventArgs">
+            <summary>
+            EventArgs that suites pretty much any event.
+            </summary>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.GeneralEventArgs.#ctor(System.String,System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StablePoint.Hardware.OneWire.GeneralEventArgs"/> class.
+            </summary>
+            <param name="source">The source of the error.</param>
+            <param name="message">The error message.</param>
+            <param name="additionalInfo">Additional info, depending on the device, implementation and situation.</param>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.GeneralEventArgs.Source">
+            <summary>
+            Gets the source of the event, usually a name of the function or module that caused error.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.GeneralEventArgs.Message">
+            <summary>
+            Gets the message.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.GeneralEventArgs.AdditionalInfo">
+            <summary>
+            Gets the additional info. Actual content depends on the device and implementation, and can be anything.
+            </summary>
+            <value>
+            The additional info.
+            </value>
+        </member>
+        <member name="T:StablePoint.Hardware.OneWire.Devices.Ds18B20">
+            <summary>
+            Programmable Resolution 1-Wire Digital Thermometer.
+            </summary>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.#ctor(StablePoint.Hardware.OneWire.Device)">
+            <summary>
+            Creates an instance of the <see cref="T:StablePoint.Hardware.OneWire.Devices.Ds18B20"/> class.
+            </summary>
+            <param name="device">A <see cref="T:StablePoint.Hardware.OneWire.Device"/> that has the low-level communication capabilities.</param>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.SetResolution(StablePoint.Hardware.OneWire.Devices.Ds18B20.ConversionResolution)">
+            <summary>
+            Sets the temperature conversion resolution. Also, it is automatically saved it to EEPROM.
+            </summary>
+            <param name="resolution"></param>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.UpdateValues">
+            <summary>
+            Updates temperature and resolution values.
+            </summary>
+            <returns>true, if update succeeds, and false otherwise.</returns>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.CalculateCrc(System.Byte[],System.Int32)">
+            <summary>
+            Calculates 1-Wire CRC for the provided byte array.
+            </summary>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.ReadScratchPad">
+            <summary>
+            Simply reads scratchpad and updates variables.
+            </summary>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.ReadTemperature">
+            <summary>
+            Reads temperature. If the procedure fails, it either throws an exception, or returns a magic number -999. Usage of <see cref="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.UpdateValues"/> is recommended.
+            </summary>
+            <returns>Temperature in °C.</returns>
+        </member>
+        <member name="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.WriteBytes(System.Byte[])">
+            <summary>
+            Simply writes a few bytes to the bus (NETMF OneWire class allows writing only one byte at once).
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Devices.Ds18B20.Name">
+            <summary>
+            A human readable name of the temperature probe.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Devices.Ds18B20.Address">
+            <summary>
+            Address of the sensor in hexadecimal representation.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Devices.Ds18B20.Resolution">
+            <summary>
+            Last known temperature conversion resolution, updated by calling <see cref="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.UpdateValues"/> method.
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Devices.Ds18B20.Temperature">
+            <summary>
+            Last known temperature in °C, updated by calling <see cref="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.UpdateValues"/> method. 
+            </summary>
+        </member>
+        <member name="P:StablePoint.Hardware.OneWire.Devices.Ds18B20.AreExceptionsSilent">
+            <summary>
+            Defines how critical errors are handled. Default behavior is to raise an exception on critical error. Alternatively, only <see cref="E:StablePoint.Hardware.OneWire.Devices.Ds18B20.ErrorOccurred"/> event may be raised.
+            </summary>
+            <value>
+            If true, critical errors raises <see cref="E:StablePoint.Hardware.OneWire.Devices.Ds18B20.ErrorOccurred"/> event. If false, an exception is thrown.
+            </value>
+        </member>
+        <member name="E:StablePoint.Hardware.OneWire.Devices.Ds18B20.ErrorOccurred">
+            <summary>
+            Occurs when some error happen.
+            </summary>
+        </member>
+        <member name="E:StablePoint.Hardware.OneWire.Devices.Ds18B20.ValuesUpdated">
+            <summary>
+            Raised when values are successfully updated using the <see cref="M:StablePoint.Hardware.OneWire.Devices.Ds18B20.UpdateValues"/> function.
+            </summary>
+        </member>
+        <member name="T:StablePoint.Hardware.OneWire.Devices.Ds18B20.ConversionResolution">
+            <summary>
+            Resolution of the temperature conversion. Affect conversion time (750ms maximum).
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Devices.Ds18B20.ConversionResolution.HalfDegree">
+            <summary>
+            0.5°C resolution, 94ms conversion time.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Devices.Ds18B20.ConversionResolution.QuarterDegree">
+            <summary>
+            0.25°C resolution, 188ms conversion time.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Devices.Ds18B20.ConversionResolution.OneEighthDegree">
+            <summary>
+            0.125°C resolution, 375ms conversion time.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Devices.Ds18B20.ConversionResolution.OneSixteenthDegree">
+            <summary>
+            0.0625°C resolution, 750ms conversion time.
+            </summary>
+        </member>
+        <member name="T:StablePoint.Hardware.OneWire.Family">
+            <summary>
+            Family of the OneWire device.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Family.Unknown">
+            <summary>
+            Any other device that is not recognized in this enumeration.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Family.Ds1904">
+            <summary>
+            iButton RTC.
+            </summary>
+        </member>
+        <member name="F:StablePoint.Hardware.OneWire.Family.Ds18B20">
+            <summary>
+            Programmable Resolution 1-Wire Digital Thermometer.
+            </summary>
+        </member>
+        <member name="T:StablePoint.Hardware.OneWire.GeneralEventHandler">
+            <summary> 
+            A delegate used to define a general event. 
+            </summary>
+            <param name="sender">A sender.</param> 
+             <param name="e"><see cref="T:StablePoint.Hardware.OneWire.GeneralEventArgs"/> class, giving additional info about the error event.</param> 
+        </member>
+    </members>
+</doc>
